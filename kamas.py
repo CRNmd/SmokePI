@@ -9,9 +9,9 @@ import threading  # Pour exécuter la détection en parallèle
 
 # Initialisation des GPIO
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(24, GPIO.IN)
-GPIO.setup(26, GPIO.OUT)
-buzz = GPIO.PWM(26, 100)
+GPIO.setup(YOUR_PIN, GPIO.IN)
+GPIO.setup(YOUR_PIN, GPIO.OUT)
+buzz = GPIO.PWM(YOUR_PIN, 100 ) #You can adjust the frenquency that as you wish
 
 # Initialisation de l'application FastAPI
 app = FastAPI()
@@ -26,7 +26,7 @@ async def index():
 
 @app.get("/gas-status", response_class=JSONResponse)
 async def gas_status():
-    gas_detected = GPIO.input(24) == GPIO.HIGH
+    gas_detected = GPIO.input(YOUR_PIN) == GPIO.HIGH
     return {"gas_detected": gas_detected}
 
 
@@ -34,18 +34,18 @@ async def gas_status():
 def gas_detection_loop():
     try:
         while True:
-            gas_detected = GPIO.input(24) == GPIO.HIGH
+            gas_detected = GPIO.input(YOUR_PIN) == GPIO.HIGH
             if gas_detected:
                 buzz.start(1)
                 print("-------------------------------------------")
-                print(f"Valeur de sortie du MQ2 : {GPIO.input(24)}")
+                print(f"Valeur de sortie du MQ2 : {GPIO.input(YOUR_PIN)}")
                 print("Un gaz a été détecté dans la pièce.")
                 print("L'alarme a été activé.")
                 print("-------------------------------------------")
             else:
                 buzz.stop()
                 print("-------------------------------------------")
-                print(f"Valeur de sortie du MQ2 : {GPIO.input(24)}")
+                print(f"Valeur de sortie du MQ2 : {GPIO.input(YOUR_PIN)}")
                 print("Pas de gaz détecté")
                 print("L'alarme est désactivé.")
                 print("-------------------------------------------")
