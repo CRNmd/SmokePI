@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détection de Gaz</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        #status { font-size: 2em; color: white; padding: 10px; border-radius: 5px; }
+        .safe { background-color: green; }
+        .danger { background-color: red; }
+    </style>
+</head>
+<body>
+    <h1>Détection de Gaz</h1>
+    <div id="status" class="safe">Aucun Gaz détecté</div>
+
+    <script>
+        function checkGasStatus() {
+            fetch('/gas-status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusDiv = document.getElementById('status');
+                    if (data.gas_detected) {
+                        statusDiv.textContent = "Gaz détecté!";
+                        statusDiv.className = "danger";
+                    } else {
+                        statusDiv.textContent = "Aucun Gaz détecté";
+                        statusDiv.className = "safe";
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+
+        // Vérification de l'état du capteur toutes les 2 secondes
+        setInterval(checkGasStatus, 200);
+    </script>
+</body>
+</html>
+
